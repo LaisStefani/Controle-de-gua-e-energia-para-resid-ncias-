@@ -1,0 +1,102 @@
+#include <SPI.h>
+#include <Ethernet.h>
+
+//variáveis globais relativas ao Ethernet Shield
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED }; //Endereço MAC do Arduino. 
+IPAddress ip(192,168,0,101); //Endereço IP do Arduino.
+char server[] = "192.168.0.100"; //Endereço do Servidor.
+EthernetClient client;
+
+//variáveis globais relativas ao sensor de fluxo
+int Pulso;
+int j; //variável para os segundos
+double liters = 0; //variável para somar a média
+double vazao = 0; //variável para armazenar o valor em L/min
+double valormedia = 0;
+
+//variáveis globais relativas ao sensor de corrente
+int pinoSensor = A0; //define a porta analógica A0 como entrada 
+int sensorValue_aux = 0; //auxiliar para a variável valorSensor
+double valorSensor = 0;
+double valorCorrente = 0;
+double voltsporUnidade = 0.004887586;
+double potencia = 0; //variável para calcular o KWh
+double sensibilidade = 0.066;
+int tensao = 127; //tensão da rede
+
+void setup() {
+  Serial.begin(9600); //inicia a saída Serial
+  
+  Ethernet.begin(mac, ip); //inicia o Ethernet Shield
+  
+  pinMode(2, INPUT);
+  attachInterrupt(0, incrpulso, RISING); //Configura a porta digital 2, para interrupção
+
+  pinMode(pinoSensor, INPUT); //define a porta analógica A0 como entrada
+}
+
+void loop() {
+  for(j=0; j<=60; j++) {
+    Pulso = 0; //começa do 0 variável para contar os giros das pás internas, em segundos
+    sei(); //liga interrupção
+    delay (1000); //espera 1 segundo
+    cli(); //desliga interrupção
+    vazao = Pulso / 7.5; //converte para Litros/minuto
+    liters = liters + vazao; //soma todas as vazões e guarda em uma 
+    //variável para tirar a média posteriormente
+    vazao = 0;
+
+    sensorValue_aux = (analogRead(pinoSensor) - 510); //lê o sensor na pino analogico A0 e 
+    //ajusta o valor lido ja que a saída do sensor é (1023)vcc/2 para corrente = 0
+    valorSensor += pow(sensorValue_aux,2); //somam os quadrados das leituras.
+    delay(1);
+  }
+  
+  liters = liters/60; //tira a valormedia dividindo por 60
+  Serial.print("\n Media por minuto = "); //imprime a frase valormedia por minuto =
+  Serial.print(liters); //imprime o valor da valormedia
+  Serial.println(" L/min - "); //Imprime L/min
+  Serial.flush();
+
+  valorSensor = (sqrt(valorSensor/ 60)) * voltsporUnidade; // finaliza o calculo da média 
+  //quadratica e ajusta o valor lido para volts
+  valorCorrente = (valorSensor/sensibilidade); // calcula a corrente considerando a 
+  //sensibilidade do sernsor (185 mV por amper)
+  
+  //tratamento para possivel ruido
+  if(valorCorrente <= 0.095){ 
+    valorCorrente = 0;
+  } 
+
+  Serial.print(" Potencia (Consumo): "); //calcula e mostra o valor da potencia
+  potencia = (valorCorrente * tensao); //tranformação em KWh
+  Serial.print(potencia); //salva a corrente em uma variável para o cálculo do consumo
+  Serial.println(" Watts");
+  
+  //realiza a conexão e envia os dados para o servidor. É importante perceber que esses
+  //códigos só são executados ao final do for anterior, ou seja, a cada 60 segundos
+  if (client.connect(server, 80)) {
+    client.print("GET /measurer/medida.php?");
+    client.print("vazao=");
+    client.print(liters);
+    client.print("&energia=");
+    client.print(potencia);
+    client.println(" HTTP/1.0"); 
+    client.println("Host: 192.168.0.100");
+    client.println();
+    client.stop();
+  } 
+  else {
+    Serial.println("--> conexão falhou\n");
+  }
+  liters = 0; //torna variável liters = 0, para uma nova contagem
+  
+  valorSensor = 0; //torna variável valorSensor = 0, para uma nova contagem
+  
+  j = 0; //torna a variável 0, para uma nova contagem
+}
+
+void incrpulso ()
+{ 
+Pulso++;
+}

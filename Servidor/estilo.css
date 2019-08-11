@@ -1,0 +1,172 @@
+* {margin: 0; 
+  padding: 0; 
+  font-size: 100%; 
+  border: none; 
+  outline: none; 
+  font-weight: 300; 
+  box-sizing: border-box;
+  font-family: 'Lato', sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+}
+a {
+  text-decoration: none; 
+  color: black; float: left;
+  margin-left: 5px;
+}
+ul {
+  list-style: none;
+}
+img {
+  max-width: 800%;
+  width: 56px; 
+  height: 56px; 
+  float: left; 
+  background-image: url("img/logo-mobile.png")center center/56px no-repeat;
+  font-size: 0;
+  margin-right:850px;
+}
+
+
+/*===========CABEÇALHO===========*/
+.cabecalho{
+	width: 100%; float: left;padding: 3% 4%;
+	float: left;
+}
+
+.radius {
+  border-radius: 7px;
+}
+
+/*===========MENU===========*/
+.menu ul {
+  width: 100%;
+  text-align: center;
+ }
+
+.menu li a {
+  font-size: 1em; 
+  color: #287fce; 
+  padding: 1.0% 2%;
+}
+
+.menu li a:hover {
+  border:1px; 
+  color: #287fce;
+}
+/*=========== CONTAINER ==========*/
+.container {
+  width: 100%; 
+  height: auto;
+  float: left; 
+  padding: 1% 1%; 
+  text-align: center; 
+}
+/*===========BANNER=========== */
+.banner {
+	background-color: #2f3030; 
+	height: auto;
+}
+
+.title h2 {
+	width: 100%;
+	font-size: 2.0em; 
+	color: #fff; 
+	font-weight: 700; 
+	float: left;
+}
+
+.title h3 {
+	width: 180px;
+	font-size: 1.0em; 
+	color: #fff;  
+	align-items: center;
+	}
+
+/*===========SERVIÇOS===========*/
+.servicos{ 
+	width: 100%;
+	float: left;
+	padding: 3% 4%;
+	float: left;
+}
+
+.servico { 
+	width: 100%; 
+	height: auto; 
+	margin-top: 5px;
+	border: 1px solid black;
+	background: linear-gradient(to bottom, #ECE9E6,#ECE9E6);
+	float: left;
+}
+
+.radius {
+	border-radius: 7px;
+}
+.inner {
+	padding: 7%;
+}
+.inner h4 {
+	font-size: 1.2em; 
+	color: #130400;
+	text-align: center; 
+}
+.tabela { 
+	width: 100%; 
+	height: auto; 
+	margin-top: 5px;
+	border: 1px solid black;
+	background: linear-gradient(to bottom, #ECE9E6,#ECE9E6);
+	float: left;
+}
+table, th, td {
+  text-align: center;
+  width: 80%;
+  height: auto;
+  margin-top: 4px;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+/*===========RODAPÉ===========*/
+.rodape{
+float: left;
+width: 100%;
+background-color: #2f3030; 
+text-align: center;
+}
+.social-icons a {
+  font-size: 1.5em; 
+  color: rgba(255,255,255,0.7); 
+}
+
+.social-icons a:hover {
+  color: rgb(255,255,255);
+}
+
+.copyright {
+  color: rgba(255, 255, 255, 0.7); 
+  padding: 0.5%;
+}
+
+
+/* ========== MOBILE FIRST ==========*/
+
+/* SMALL DEVICES - SMARTPHONES */
+@media screen and (min-width: 480px) {
+.logo { margin-left: 80px;width: 80px; background: url(../img/logo.png) center center/80px no-repeat;}
+.servicos{ width: 100%;float: left;padding: 3% 4%;}
+
+/* SMALL DEVICES - TABLETS*/
+@media screen and (min-width: 768px) {
+.servico { width: 65%; margin-right: 3%;}
+.tabela {width: 32%;}
+.inner {padding: 3%;}
+/* MEDIUM DEVICES - TABLETS & DESKTOPS*/
+@media screen and (min-width: 960px) {
+.servicos{padding: 2% 2%;}
+.servico { width: 65%; margin-right: 3%;}
+.tabela {width: 32%;}
+.inner {padding: 3%;}

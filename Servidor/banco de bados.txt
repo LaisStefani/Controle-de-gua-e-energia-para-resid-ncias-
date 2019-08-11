@@ -1,0 +1,12 @@
+
+create database measurer
+default character set  utf8
+default collate utf8_general_ci;
+
+create table medidas (
+ID int not null auto_increment,
+horario datetime,
+vazao float,
+energia float,
+primary key (ID))
+default charset = utf8;
